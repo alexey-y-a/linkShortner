@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"linkShortner/configs"
+	"linkShortner/internal/hello"
 	"net/http"
-	"shortly-api/configs"
-	"shortly-api/internal/hello"
 )
 
 func main() {
