@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"encoding/json"
 	"fmt"
 	"linkShortner/configs"
 	"linkShortner/pkg/res"
@@ -25,8 +26,21 @@ func NewAuthHandler(router *http.ServeMux, deps AuthHandlerDeps) {
 
 func (handler *AuthHandler) Login() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		fmt.Println(handler.Config.Auth.Secret)
-		fmt.Println("Login")
+		var payload LoginRequest
+		err := json.NewDecoder(req.Body).Decode(&payload)
+		if err != nil {
+			res.Json(w, err.Error(), 402)
+			return
+		}
+		if payload.Email == "" {
+			res.Json(w, "Email required", 402)
+			return
+		}
+		if payload.Password == "" {
+			res.Json(w, "Password required", 402)
+			return
+		}
+		fmt.Println(payload)
 		data := LoginResponse{
 			Token: "123",
 		}
