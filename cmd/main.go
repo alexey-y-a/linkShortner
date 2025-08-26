@@ -4,16 +4,25 @@ import (
 	"fmt"
 	"linkShortner/configs"
 	"linkShortner/internal/auth"
+	"linkShortner/internal/link"
 	"linkShortner/pkg/db"
 	"net/http"
 )
 
 func main() {
 	conf := configs.LoadConfig()
-	_ = db.NewDb(conf)
+	db := db.NewDb(conf)
 	router := http.NewServeMux()
+
+	//Repositories
+	linkRepository := link.NewLinkRepository(db)
+
+	//Handler
 	auth.NewAuthHandler(router, auth.AuthHandlerDeps{
 		Config: conf,
+	})
+	link.NewLinkHandler(router, link.LinkHandlerDeps{
+		LinkRepository: linkRepository,
 	})
 
 	server := http.Server{
