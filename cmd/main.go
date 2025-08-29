@@ -5,6 +5,7 @@ import (
 	"linkShortner/configs"
 	"linkShortner/internal/auth"
 	"linkShortner/internal/link"
+	"linkShortner/internal/user"
 	"linkShortner/pkg/db"
 	"linkShortner/pkg/middleware"
 	"net/http"
@@ -17,10 +18,15 @@ func main() {
 
 	//Repositories
 	linkRepository := link.NewLinkRepository(db)
+	userRepository := user.NewUserRepository(db)
 
-	//Handler
+	// Services
+	authService := auth.NewAuthService(userRepository  )
+
+	// Handler
 	auth.NewAuthHandler(router, auth.AuthHandlerDeps{
 		Config: conf,
+		AuthService: authService,
 	})
 	link.NewLinkHandler(router, link.LinkHandlerDeps{
 		LinkRepository: linkRepository,
