@@ -2,6 +2,7 @@ package main
 
 import (
 	"linkShortner/internal/link"
+	"linkShortner/internal/stat"
 	"linkShortner/internal/user"
 	"os"
 
@@ -20,4 +21,5 @@ func main() {
 		panic(err)
 	}
 	db.AutoMigrate(&link.Link{}, &user.User{})
+	db.AutoMigrate(&link.Link{}, &user.User{}, &stat.Stat{})
 }
